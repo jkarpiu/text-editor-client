@@ -14,6 +14,7 @@
 
 <script>
     import fs from "fs"
+import { ipcRenderer } from 'electron';
     export default {
 
         created() {
@@ -30,18 +31,9 @@
             }
         },
         methods: {
-            new() {
-                this.filename = "";
-                this.adding = true;
-            },
             newfile() {
                 this.adding = false;
-                fs.writeFile("./files/"+this.filename, "", function (err) {
-                    if (err) return console.log("Błąd zapisywania") ;
-                    
-                });
-                this.$emit('loadFile', this.filename);
-                this.files = fs.readdirSync('./files');
+                ipcRenderer.send("FILE_NEW");
                 this.refresh();
             },
             refresh() {

@@ -48,7 +48,7 @@ export default {
     mounted: function () {
     this.$nextTick(function () {
         ipcRenderer.on('NEW_DOCUMENT_NEEDED', () => {
-            this.$refs.recent.new()
+            this.$refs.recent.newfile()
         });
         ipcRenderer.on('SAVE_REQUIRED', () => {
             this.$refs.editor.save()

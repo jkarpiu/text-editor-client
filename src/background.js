@@ -1,24 +1,41 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import {
+  app,
+  protocol,
+  BrowserWindow,
+  Menu,
+  ipcMain, 
+  dialog
+} from 'electron'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
+var fs = require('fs');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{
+  scheme: 'app',
+  privileges: {
+    secure: true,
+    standard: true
+  }
+}])
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, webPreferences: {
-    nodeIntegration: true
-  } })
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -62,10 +79,10 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-  await installVueDevtools()
-} catch (e) {
-  console.error('Vue Devtools failed to install:', e.toString())
-}
+      await installVueDevtools()
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
 
   }
 
@@ -86,4 +103,23 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.on("FILE_NEW", () => {
+  let content = "";
+
+  // You can obviously give a direct path without use the dialog (C:/Program Files/path/myfileexample.txt)
+  dialog.showSaveDialog((fileName) => {
+    if (fileName === undefined) {
+      console.log("You didn't save the file");
+      return;
+    }
+
+    // fileName is a string that contains the path and filename created in the save file dialog.  
+    fs.writeFile(fileName, content, (err) => {
+      if (err) {
+        console.log("An error ocurred creating the file " + err.message)
+      }
+    });
+  });
+})
 
