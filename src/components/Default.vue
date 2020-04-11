@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             <div class="col-3">
-                <Recent ref="recent" v-on:loadFile="load"/>
+                <Recent ref="recent"/>
             </div>
             <div class="col-9">
                 <Editor ref="editor" v-on:refresh="$refs.recent.refresh()" :file="file" :text="{data}"/>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import fs from "fs"
 import Editor from "./Editor"
 import Recent from "./Recent"
 import Toolbar from "./Toolbar"
@@ -36,11 +35,8 @@ export default {
     },
     methods: {
         load(file) {
-            fs.readFile("./files/" + file, (err, data) => {
-                if (err) throw err;
-                this.data = data;
-            }
-            );
+
+            
             console.log(this.data);
             this.file = file;
         }
@@ -52,6 +48,9 @@ export default {
         });
         ipcRenderer.on('SAVE_REQUIRED', () => {
             this.$refs.editor.save()
+        });
+         ipcRenderer.on('DOCUMENT_NEEDS_TO_OPEN', (event, data) => {
+           this.data = data.file;
         });
     });
 }
