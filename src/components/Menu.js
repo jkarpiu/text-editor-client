@@ -20,24 +20,10 @@ module.exports = function(win){
                                 dialog
                             } = require('electron')
                     
-                            /*
-                            //renderer.js - a renderer process
-                            const {remote} = require('electron'),
-                            dialog = remote.dialog,
-                            WIN = remote.getCurrentWindow();
-                            */
-                    
                             let options = {
-                                // See place holder 1 in above image
                                 title: "Otwieranie pliku",
-                    
-                                // See place holder 2 in above image
                                 defaultPath: "~",
-                    
-                                // See place holder 3 in above image
                                 buttonLabel: "Otwórz",
-                    
-                                // See place holder 4 in above image
                                 filters: [{
                                         name: 'Pliki tekstowe',
                                         extensions: ['txt']
@@ -50,12 +36,11 @@ module.exports = function(win){
                                 properties: ['openFile']
                             }
                     
-                            //Synchronous
                             let filePaths = dialog.showOpenDialog(win, options)
                             fs.readFile(filePaths[0], (err, data) => {
                                 if (err) throw err;
                                 console.log(data);
-                                win.webContents.send('DOCUMENT_NEEDS_TO_OPEN', {file: data});
+                                win.webContents.send('DOCUMENT_NEEDS_TO_OPEN', {file: data, path: filePaths});
                             })
                             
                         }

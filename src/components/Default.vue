@@ -2,14 +2,6 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <Toolbar id="toolbar" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-3">
-                <Recent ref="recent"/>
-            </div>
-            <div class="col-9">
                 <Editor ref="editor" v-on:refresh="$refs.recent.refresh()" :file="file" :text="{data}"/>
             </div>
         </div>
@@ -18,14 +10,10 @@
 
 <script>
 import Editor from "./Editor"
-import Recent from "./Recent"
-import Toolbar from "./Toolbar"
 const { ipcRenderer } = require('electron'); 
 export default {
     components: {
-        Editor,
-        Recent,
-        Toolbar
+        Editor
     },
     data () {
         return {
@@ -44,7 +32,7 @@ export default {
     mounted: function () {
     this.$nextTick(function () {
         ipcRenderer.on('NEW_DOCUMENT_NEEDED', () => {
-            this.$refs.recent.newfile()
+            this.data = new TextEncoder('utf-8').encode(" ")
         });
         ipcRenderer.on('SAVE_REQUIRED', () => {
             this.$refs.editor.save()

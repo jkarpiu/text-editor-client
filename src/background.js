@@ -123,3 +123,35 @@ ipcMain.on("FILE_NEW", () => {
   });
 })
 
+ipcMain.on("STORE_FILE", (event, data) => {
+  let options = {
+    // See place holder 1 in above image
+    title: "Zapisywanie pliku",
+
+    // See place holder 2 in above image
+    defaultPath: "~",
+
+    // See place holder 3 in above image
+    buttonLabel: "Zapisz",
+
+    // See place holder 4 in above image
+    filters: [{
+            name: 'Pliki tekstowe(*.txt)',
+            extensions: ['txt']
+        },
+        {
+            name: 'Wszystkie pliki',
+            extensions: ['*']
+        }
+    ],
+    properties: ['saveFile']
+}
+console.log(data)
+//Synchronous
+let filePaths = dialog.showSaveDialog(win, options)
+  fs.writeFile(filePaths, data.text, function (err) {
+    if (err) return console.log("Błąd zapisywania") ;
+        
+    });
+    
+})
