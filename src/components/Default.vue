@@ -39,6 +39,7 @@ export default {
         });
          ipcRenderer.on('DOCUMENT_NEEDS_TO_OPEN', (event, data) => {
            this.data = data.file;
+           console.log(data.file)
         });
     });
 }
